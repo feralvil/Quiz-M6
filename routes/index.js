@@ -25,5 +25,11 @@ router.get('/author', function(req, res, next) {
   res.render('author');
 });
 
+/* GET quizes/new */
+router.get('/quizes/new', quizController.new);
+
+/* POST quizes/create */
+router.post('/quizes/create', quizController.create);
+
 
 module.exports = router;
