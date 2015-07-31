@@ -25,7 +25,7 @@ exports.index = function (req,res){
         if (quizes){
           textoresp = 'Se han encontrado ' + quizes.length + ' preguntas con el término ' + req.query.search;
         }
-        res.render('quizes/index', {quizes: quizes, textoresp: textoresp})
+        res.render('quizes/index', {quizes: quizes, textoresp: textoresp, errors: []})
       }
     ).catch (function(error){next(error);});
   }
@@ -33,7 +33,7 @@ exports.index = function (req,res){
     models.Quiz.findAll().then(
       function (quizes){
         var textoresp = 'Se han encontrado ' + quizes.length + ' preguntas';
-        res.render('quizes/index', {quizes: quizes, textoresp: textoresp});
+        res.render('quizes/index', {quizes: quizes, textoresp: textoresp, errors: []});
       }
     ).catch (function(error){next(error);});
   }
@@ -42,7 +42,7 @@ exports.index = function (req,res){
 
 // GET /quizes/:id
 exports.show = function (req,res){
-  res.render('quizes/show', {quiz: req.quiz});
+  res.render('quizes/show', {quiz: req.quiz, errors: []});
 };
 
 // GET /quizes/:id/answer
@@ -51,7 +51,7 @@ exports.answer = function (req,res){
   if (req.query.respuesta === req.quiz.respuesta){
     resultado = "La respuesta es Correcta";
   }
-  res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
+  res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: []});
 };
 
 // GET /quizes/new
@@ -59,15 +59,21 @@ exports.new = function (req,res){
   var quiz = models.Quiz.build(
     {pregunta: "Pregunta", respuesta: "Respuesta"}
   );
-  res.render('quizes/new', {quiz: quiz});
+  res.render('quizes/new', {quiz: quiz, errors: []});
 };
 
 // POST /quizes/create
 exports.create = function (req,res){
   var quiz = models.Quiz.build(req.body.quiz);
-
-  // Guarda en la BBDD los campos pregunta y respuesta:
-  quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
-    res.redirect('/quizes/');
+  quiz.validate().then(function (err){
+    if (err){
+      res.render('quizes/new', {quiz: quiz, errors: err.errors});
+    }
+    else{
+      // Guarda en la BBDD los campos pregunta y respuesta:
+      quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+        res.redirect('/quizes/');
+      });
+    }
   });
 };
