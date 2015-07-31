@@ -31,5 +31,10 @@ router.get('/quizes/new', quizController.new);
 /* POST quizes/create */
 router.post('/quizes/create', quizController.create);
 
+/* GET quizes/:id/edit  */
+router.get('/quizes/:quizId(\\d+)/edit', quizController.edit);
+
+/* PUT quizes/:id  */
+router.put('/quizes/:quizId(\\d+)', quizController.update);
 
 module.exports = router;
