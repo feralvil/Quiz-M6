@@ -22,7 +22,7 @@ router.get('/quizes/:quizId(\\d+)/answer', quizController.answer);
 
 /* GET author page. */
 router.get('/author', function(req, res, next) {
-  res.render('author');
+  res.render('author', { title: 'Autor', errors: []});
 });
 
 /* GET quizes/new */
@@ -36,5 +36,8 @@ router.get('/quizes/:quizId(\\d+)/edit', quizController.edit);
 
 /* PUT quizes/:id  */
 router.put('/quizes/:quizId(\\d+)', quizController.update);
+
+/* DELETE quizes/:id  */
+router.delete('/quizes/:quizId(\\d+)', quizController.destroy);
 
 module.exports = router;
