@@ -33,15 +33,15 @@ router.get('/author', function(req, res, next) {
   res.render('author', { title: 'Autor', errors: []});
 });
 /* GET quizes/new */
-router.get('/quizes/new', quizController.new);
+router.get('/quizes/new', sessionController.loginRequired, quizController.new);
 /* POST quizes/create */
-router.post('/quizes/create', quizController.create);
+router.post('/quizes/create', sessionController.loginRequired, quizController.create);
 /* GET quizes/:id/edit  */
-router.get('/quizes/:quizId(\\d+)/edit', quizController.edit);
+router.get('/quizes/:quizId(\\d+)/edit', sessionController.loginRequired, quizController.edit);
 /* PUT quizes/:id  */
-router.put('/quizes/:quizId(\\d+)', quizController.update);
+router.put('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.update);
 /* DELETE quizes/:id  */
-router.delete('/quizes/:quizId(\\d+)', quizController.destroy);
+router.delete('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.destroy);
 
 /* Definición de rutas de comments */
 /* GET quizes/:id/comments/new  */
