@@ -44,6 +44,8 @@ router.get('/quizes/:quizId(\\d+)/edit', sessionController.loginRequired, quizCo
 router.put('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.update);
 /* DELETE quizes/:id  */
 router.delete('/quizes/:quizId(\\d+)', sessionController.loginRequired, quizController.destroy);
+/* GET quizes/new */
+router.get('/quizes/statistics', sessionController.loginRequired, quizController.statistics);
 
 /* Definición de rutas de comments */
 /* GET quizes/:id/comments/new  */

@@ -84,7 +84,7 @@ exports.create = function (req,res){
 // GET /quizes/:id/edit
 exports.edit = function (req,res){
   var quiz = req.quiz; // Autoload de Instancia quiz
-  res.render('quizes/edit', {quiz: quiz, errors: []});
+  res.render('/quizes/edit', {quiz: quiz, errors: []});
 };
 
 // PUT /quizes/:id
@@ -95,7 +95,7 @@ exports.update = function (req,res){
 
   req.quiz.validate().then(function (err){
     if (err){
-      res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
+      res.render('/quizes/edit', {quiz: req.quiz, errors: err.errors});
     }
     else{
       // Guarda en la BBDD los campos pregunta y respuesta:
@@ -111,4 +111,27 @@ exports.destroy = function (req,res){
   req.quiz.destroy().then(function (){
     res.redirect('/quizes/');
   }).catch (function(error){next(error);});
+};
+
+// GET /quizes/statistics
+exports.statistics = function (req,res){
+  var estadisticas = {npreg : 0, ncom: 0, media: 0, pregcom: 0, pregsin: 0};
+  models.Quiz.findAll({
+    include: [{model: models.Comment}]
+  }).then(
+    function (quizes){
+      estadisticas.npreg = quizes.length;
+      for (index in quizes){
+        if (quizes[index].Comments.length > 0){
+          estadisticas.ncom += quizes[index].Comments.length;
+          estadisticas.pregcom++;
+        }
+        else{
+          estadisticas.pregsin++;
+        }
+        estadisticas.media = (estadisticas.ncom / estadisticas.npreg).toFixed(2);
+      }
+      res.render('quizes/statistics', {estadisticas: estadisticas, errors: []});
+    }
+  ).catch (function(error){next(error);});
 };
