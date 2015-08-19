@@ -42,6 +42,33 @@ app.use(function (req, res, next){
    next();
 });
 
+// Helper para hacer el auto-logout:
+app.use(function (req, res, next){
+  var fecha = new Date();
+  var hora = fecha.getTime();
+  if (req.session.ultima > 0){
+    var dif = hora - req.session.ultima; // Diferencia desde la última interacción
+    if (dif > 120000){ // Han pasado más de 2 minutos (120000 milisegundos)
+      // Borramos las variables de sesión
+      delete req.session.user;
+      delete req.session.ultima;
+    }
+    else{
+      // Actualizamos valores
+      req.session.dif = dif; // Tiempo de inactividad
+      req.session.ultima = hora; // Hora de última interacción
+      res.locals.session = req.session; // Hacer visible req.session en las vistas
+    }
+  }
+  else{
+    // Actualizamos valores
+    req.session.ultima = hora;
+    req.session.dif = 0;
+    res.locals.session = req.session;
+  }
+  next();
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler

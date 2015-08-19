@@ -84,7 +84,7 @@ exports.create = function (req,res){
 // GET /quizes/:id/edit
 exports.edit = function (req,res){
   var quiz = req.quiz; // Autoload de Instancia quiz
-  res.render('/quizes/edit', {quiz: quiz, errors: []});
+  res.render('quizes/edit', {quiz: quiz, errors: []});
 };
 
 // PUT /quizes/:id
@@ -95,7 +95,7 @@ exports.update = function (req,res){
 
   req.quiz.validate().then(function (err){
     if (err){
-      res.render('/quizes/edit', {quiz: req.quiz, errors: err.errors});
+      res.render('quizes/edit', {quiz: req.quiz, errors: err.errors});
     }
     else{
       // Guarda en la BBDD los campos pregunta y respuesta:
